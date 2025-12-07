@@ -1,0 +1,4 @@
+tai cv2: sudo apt install -y python3-opencv
+tai file de phat am thanh : sudo apt-get install mpg123
+espeak: sudo apt-get install espeak
+sudo apt-get install -y mplayer lame

@@ -1,0 +1,146 @@
+2025-04-23 17:30:51,076 - INFO: 
+
+=================================================
+2025-04-23 17:30:51,076 - INFO: HỆ THỐNG ĐO NHIỆT ĐỘ VÀ ĐỘ ẨM
+2025-04-23 17:30:51,076 - INFO: =================================================
+2025-04-23 17:30:51,076 - INFO: Khởi tạo cảm biến DHT11 (PIN 4)...
+2025-04-23 17:30:51,076 - INFO: Hệ thống đã sẵn sàng!
+2025-04-23 17:30:51,077 - INFO: =================================================
+2025-04-23 17:30:52,103 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:53,623 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:55,142 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:55,643 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:30:58,662 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:00,182 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:01,706 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:02,207 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:31:03,943 - INFO: Ứng dụng kết thúc
+2025-04-23 17:31:05,226 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:06,748 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:08,268 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:08,770 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:31:09,772 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:31:11,791 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:13,311 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:14,830 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:15,331 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:31:16,332 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:31:18,351 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:19,872 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:21,400 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:21,901 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:31:22,902 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:31:24,921 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:26,441 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:27,960 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:28,461 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:31:29,465 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:31:31,484 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:33,003 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:34,523 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:35,023 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:31:36,024 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:31:38,043 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:39,563 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:41,082 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:41,583 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:31:42,584 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:31:44,603 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:46,123 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:47,650 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:48,158 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:31:49,164 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:31:51,183 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:52,704 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:54,223 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:54,724 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:31:55,726 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:31:57,744 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:31:59,264 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:00,783 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:01,284 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:32:02,286 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:32:04,304 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:05,824 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:07,344 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:07,844 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:32:08,845 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:32:10,864 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:12,384 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:13,903 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:14,404 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:32:15,405 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:32:17,424 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:18,944 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:20,463 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:20,964 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:32:21,965 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:32:23,984 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:25,504 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:27,023 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:27,524 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:32:28,525 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:32:30,544 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:32,063 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:33,583 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:34,083 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:32:35,085 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:32:37,104 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:38,623 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:40,142 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:40,643 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:32:41,644 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:32:43,663 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:45,183 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:46,702 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:47,203 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:32:48,210 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:32:50,230 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:51,750 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:53,270 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:53,771 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:32:54,772 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:32:56,791 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:58,311 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:32:59,831 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:00,332 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:33:01,333 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:33:03,352 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:04,872 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:06,395 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:06,895 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:33:07,897 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:33:09,916 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:11,435 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:12,956 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:13,456 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:33:14,458 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:33:16,477 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:17,996 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:19,516 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:20,017 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:33:21,023 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:33:23,042 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:24,562 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:26,082 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:26,583 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:33:27,587 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:33:29,607 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:31,127 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:32,646 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:33,152 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:33:34,155 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:33:36,174 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:37,693 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:39,219 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:39,720 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:33:40,722 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:33:42,741 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:44,261 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:45,781 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:46,283 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:33:47,284 - ERROR: Lỗi trong quá trình cập nhật: main thread is not in main loop
+2025-04-23 17:33:49,303 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:50,824 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:52,343 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:33:52,845 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!

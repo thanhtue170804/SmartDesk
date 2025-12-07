@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Môi Trường</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        .toastify { z-index: 1000; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Thông Tin Môi Trường</h1>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h2><i class="fas fa-user"></i> Người Dùng Hiện Tại</h2>
+                <p>Người dùng: {{ current_user.user_name if current_user else 'Chưa có người dùng' }}</p>
+            </div>
+            <div class="section">
+                <h2><i class="fas fa-cloud-sun"></i> Thông Tin Thời Tiết</h2>
+                <div class="sensor-data">
+                    {% if info %}
+                        <div class="sensor-item">
+                            <span class="sensor-label">Nhiệt độ:</span>
+                            <span class="sensor-value">{{ info.temperature }}°C</span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Độ ẩm:</span>
+                            <span class="sensor-value">{{ info.humidity }}%</span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Mô tả:</span>
+                            <span class="sensor-value">{{ info.description }}</span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Tốc độ gió:</span>
+                            <span class="sensor-value">{{ info.wind_speed }} m/s</span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Áp suất:</span>
+                            <span class="sensor-value">{{ info.pressure }} hPa</span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Mây che phủ:</span>
+                            <span class="sensor-value">{{ info.clouds }}%</span>
+                        </div>
+                    {% else %}
+                        <div class="sensor-item">
+                            <span class="sensor-label">Thông tin thời tiết:</span>
+                            <span class="sensor-value error">Không có dữ liệu</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="section">
+                <a href="/" class="button"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        function showToast(message, type = 'success') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: type === 'success' ? "#4CAF50" : "#F44336",
+                stopOnFocus: true
+            }).showToast();
+        }
+
+        {% if not info %}
+            showToast('Không thể lấy thông tin thời tiết', 'error');
+        {% endif %}
+    </script>
+</body>
+</html>

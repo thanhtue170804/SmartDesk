@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều Khiển Đèn</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        .toastify { z-index: 1000; }
+        .button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .error { color: red; }
+        .success { color: green; }
+        .sensor-error { color: red; font-weight: bold; margin-top: 10px; }
+        .light-on { color: #4CAF50; font-weight: bold; }
+        .light-off { color: #F44336; font-weight: bold; }
+        .auto-enabled { color: #2196F3; font-weight: bold; }
+        .auto-disabled { color: #666; }
+        .sensor-item .fas { margin-right: 8px; color: #666; }
+        .lux-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-lightbulb"></i> Điều Khiển Đèn</h1>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h2><i class="fas fa-info-circle"></i> Thông Tin Đèn</h2>
+                <div class="sensor-data">
+                    <div class="sensor-item">
+                        <span class="sensor-label">
+                            <i class="fas fa-sun"></i> Mức ánh sáng:
+                        </span>
+                        <span class="sensor-value lux-value" id="lux">
+                            {{ lux }} lux
+                        </span>
+                    </div>
+                    <div class="sensor-item">
+                        <span class="sensor-label">
+                            <i class="fas fa-power-off"></i> Trạng thái đèn:
+                        </span>
+                        <span class="sensor-value" id="light-state">
+                            {{ light_state }}
+                        </span>
+                    </div>
+                    <div class="sensor-item">
+                        <span class="sensor-label">
+                            <i class="fas fa-magic"></i> Chế độ Auto-light:
+                        </span>
+                        <span class="sensor-value" id="auto-light-state">
+                            {{ 'Bật' if auto_light_enabled else 'Tắt' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-cog"></i> Điều Khiển</h2>
+                <div class="button-group">
+                    <button id="toggle-light-btn" onclick="toggleLight()" class="button">
+                        <i class="fas fa-power-off"></i> 
+                        {{ 'Tắt Đèn' if light_state == 'Bật' else 'Bật Đèn' }}
+                    </button>
+                    <button id="toggle-auto-btn" onclick="toggleAutoLight()" class="button">
+                        <i class="fas fa-magic"></i> 
+                        {{ 'Tắt Auto-light' if auto_light_enabled else 'Bật Auto-light' }}
+                    </button>
+                    <a href="/" class="button">
+                        <i class="fas fa-arrow-left"></i> Quay Lại
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Biến để lưu trạng thái
+        let refreshInterval;
+
+        function showToast(message, type = 'success') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: type === 'success' ? "#4CAF50" : "#F44336",
+                stopOnFocus: true
+            }).showToast();
+        }
+
+        function updateLightStatus(lightState) {
+            const lightStateElement = document.getElementById('light-state');
+            lightStateElement.textContent = lightState;
+            lightStateElement.className = 'sensor-value ' + (lightState === 'Bật' ? 'light-on' : 'light-off');
+        }
+
+        function updateAutoStatus(autoState) {
+            const autoStateElement = document.getElementById('auto-light-state');
+            autoStateElement.textContent = autoState;
+            autoStateElement.className = 'sensor-value ' + (autoState === 'Bật' ? 'auto-enabled' : 'auto-disabled');
+        }
+
+        function refreshData() {
+            // Thử fetch dữ liệu từ route status trước
+            fetch('/light_control/status')
+            .then(response => {
+                if (!response.ok) {
+                    // Nếu route status không tồn tại, thử reload trang hiện tại
+                    throw new Error('Status route not available');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    updateLightData(data);
+                }
+            })
+            .catch(error => {
+                // Fallback: Fetch HTML của trang hiện tại và parse dữ liệu
+                console.log('Sử dụng fallback method để refresh dữ liệu');
+                refreshDataFallback();
+            });
+        }
+
+        function updateLightData(data) {
+            // Cập nhật mức ánh sáng
+            document.getElementById('lux').textContent = `${data.lux} lux`;
+            
+            // Cập nhật trạng thái đèn
+            updateLightStatus(data.light_state);
+            
+            // Cập nhật trạng thái auto-light
+            const autoStateText = data.auto_light_enabled ? 'Bật' : 'Tắt';
+            updateAutoStatus(autoStateText);
+            
+            // Cập nhật nút điều khiển
+            const lightButton = document.getElementById('toggle-light-btn');
+            lightButton.innerHTML = `<i class="fas fa-power-off"></i> ${data.light_state === 'Bật' ? 'Tắt Đèn' : 'Bật Đèn'}`;
+            
+            const autoButton = document.getElementById('toggle-auto-btn');
+            autoButton.innerHTML = `<i class="fas fa-magic"></i> ${data.auto_light_enabled ? 'Tắt Auto-light' : 'Bật Auto-light'}`;
+        }
+
+        function refreshDataFallback() {
+            // Fallback method: Fetch trang hiện tại và parse dữ liệu từ HTML
+            fetch('/light_control')
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const newLux = doc.getElementById('lux');
+                const newState = doc.getElementById('light-state');
+                const newAutoState = doc.getElementById('auto-light-state');
+                
+                if (newLux) {
+                    document.getElementById('lux').textContent = newLux.textContent;
+                }
+                if (newState) {
+                    updateLightStatus(newState.textContent);
+                }
+                if (newAutoState) {
+                    updateAutoStatus(newAutoState.textContent);
+                }
+                
+                // Cập nhật nút điều khiển
+                const lightButton = document.getElementById('toggle-light-btn');
+                const currentLightState = document.getElementById('light-state').textContent;
+                lightButton.innerHTML = `<i class="fas fa-power-off"></i> ${currentLightState === 'Bật' ? 'Tắt Đèn' : 'Bật Đèn'}`;
+                
+                const autoButton = document.getElementById('toggle-auto-btn');
+                const currentAutoState = document.getElementById('auto-light-state').textContent;
+                autoButton.innerHTML = `<i class="fas fa-magic"></i> ${currentAutoState === 'Bật' ? 'Tắt Auto-light' : 'Bật Auto-light'}`;
+            })
+            .catch(error => {
+                console.error('Lỗi khi làm mới dữ liệu:', error);
+            });
+        }
+
+        function toggleLight() {
+            fetch('/light_control/toggle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.getElementById('lux').textContent = `${data.lux} lux`;
+                        updateLightStatus(data.light_state);
+                        
+                        const button = document.getElementById('toggle-light-btn');
+                        button.innerHTML = `<i class="fas fa-power-off"></i> ${data.light_state === 'Bật' ? 'Tắt Đèn' : 'Bật Đèn'}`;
+                        
+                        showToast(`Đèn đã được ${data.light_state.toLowerCase()}`, 'success');
+                    } else {
+                        showToast(`Lỗi: ${data.message}`, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error toggling light:', error);
+                    showToast('Lỗi khi điều khiển đèn', 'error');
+                });
+        }
+
+        function toggleAutoLight() {
+            fetch('/light_control/toggle_auto', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const autoStateText = data.auto_light_enabled ? 'Bật' : 'Tắt';
+                        updateAutoStatus(autoStateText);
+                        
+                        const button = document.getElementById('toggle-auto-btn');
+                        button.innerHTML = `<i class="fas fa-magic"></i> ${data.auto_light_enabled ? 'Tắt Auto-light' : 'Bật Auto-light'}`;
+                        
+                        showToast(`Auto-light đã được ${autoStateText.toLowerCase()}`, 'success');
+                    } else {
+                        showToast(`Lỗi: ${data.message}`, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error toggling auto-light:', error);
+                    showToast('Lỗi khi điều khiển auto-light', 'error');
+                });
+        }
+
+        // Khởi tạo khi trang được tải
+        document.addEventListener('DOMContentLoaded', function() {
+            // Thiết lập trạng thái ban đầu
+            const initialLightState = document.getElementById('light-state').textContent;
+            const initialAutoState = document.getElementById('auto-light-state').textContent;
+            
+            updateLightStatus(initialLightState);
+            updateAutoStatus(initialAutoState);
+            
+            // Bắt đầu auto-refresh mỗi 2 giây
+            refreshInterval = setInterval(refreshData, 2000);
+        });
+
+        // Dừng auto-refresh khi rời khỏi trang
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bàn Thông Minh</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Thêm style tùy chỉnh nếu cần */
+        .end-session-button {
+            background: linear-gradient(135deg, var(--button-off), #D32F2F);
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+        }
+        .end-session-button:hover {
+            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
+        }
+        .control-button {
+            min-width: 160px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bàn Thông Minh</h1>
+        </div>
+        <div class="content">
+            <!-- Thông tin người dùng -->
+            <div class="section">
+                <h2>Người Dùng Hiện Tại</h2>
+                <div class="sensor-data">
+                    <div class="sensor-item">
+                        <span class="sensor-label">Người dùng:</span>
+                        <span class="sensor-value" id="current_user">
+                            {% if current_user %}
+                                {{ current_user.user_name }}
+                            {% else %}
+                                Chưa có người dùng
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="button end-session-button" onclick="endSession()">Kết Thúc Phiên</button>
+                </div>
+            </div>
+
+            <!-- Thống kê sử dụng -->
+            <div class="section">
+                <h2>Thống Kê Sử Dụng</h2>
+                <div class="sensor-data">
+                    <div class="sensor-item">
+                        <span class="sensor-label">Tổng thời gian sử dụng:</span>
+                        <span class="sensor-value">{{ stats.total_time|round(2) }} giờ</span>
+                    </div>
+                    <div class="sensor-item">
+                        <span class="sensor-label">Thời gian hôm nay:</span>
+                        <span class="sensor-value">{{ stats.today_time|round(2) }} giờ</span>
+                    </div>
+                    <div class="sensor-item">
+                        <span class="sensor-label">Thời gian tuần này:</span>
+                        <span class="sensor-value">{{ stats.week_time|round(2) }} giờ</span>
+                    </div>
+                    <div class="sensor-item">
+                        <span class="sensor-label">Thời gian trung bình mỗi ngày:</span>
+                        <span class="sensor-value">{{ stats.avg_time|round(2) }} giờ</span>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <!-- Nút Quay Lại đã bị xóa -->
+                </div>
+            </div>
+
+            <!-- Điều khiển -->
+            <div class="section">
+                <h2>Điều Khiển</h2>
+                <div class="sensor-data">
+                    <!-- Không có dữ liệu sensor, chỉ để đồng nhất layout -->
+                </div>
+                <div class="button-group">
+                    <a href="/table_control" class="button control-button">Điều Khiển Bàn</a>
+                    <a href="/light_control" class="button control-button">Điều Khiển Đèn</a>
+                    <a href="/environment" class="button control-button">Thông Tin Môi Trường</a>
+                    <a href="/usage_stats_detail" class="button control-button">Chi Tiết Thống Kê</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cập nhật thông tin người dùng hiện tại mỗi 2 giây
+        function updateCurrentUser() {
+            fetch('/get_current_user')
+                .then(response => response.json())
+                .then(data => {
+                    const userElement = document.getElementById('current_user');
+                    userElement.textContent = data.user_name || 'Chưa có người dùng';
+                })
+                .catch(error => {
+                    console.error('Lỗi khi lấy thông tin người dùng:', error);
+                    document.getElementById('current_user').textContent = 'Chưa có người dùng';
+                });
+        }
+
+        // Gọi ngay khi tải trang và sau đó mỗi 2 giây
+        updateCurrentUser();
+        setInterval(updateCurrentUser, 2000);
+
+        // Hàm thiết lập người dùng
+        function setUser() {
+            const userName = prompt("Nhập tên người dùng:");
+            if (userName) {
+                fetch('/set_user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'user_name=' + encodeURIComponent(userName)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    updateCurrentUser();
+                })
+                .catch(error => {
+                    console.error('Lỗi khi thiết lập người dùng:', error);
+                    alert('Đã xảy ra lỗi khi thiết lập người dùng.');
+                });
+            }
+        }
+
+        // Hàm kết thúc phiên
+        function endSession() {
+            if (confirm("Bạn có muốn kết thúc phiên không?")) {
+                fetch('/end_session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    updateCurrentUser();
+                })
+                .catch(error => {
+                    console.error('Lỗi khi kết thúc phiên:', error);
+                    alert('Đã xảy ra lỗi khi kết thúc phiên.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

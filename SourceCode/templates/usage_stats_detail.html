@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê Chi Tiết</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        .toastify { z-index: 1000; }
+        .error { color: red; }
+        .success { color: green; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+        canvas { max-width: 600px; margin: 20px auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Thống Kê Chi Tiết</h1>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h2><i class="fas fa-user"></i> Người Dùng Hiện Tại</h2>
+                <p>Người dùng: {{ current_user.user_name if current_user else 'Chưa có người dùng' }}</p>
+            </div>
+            <div class="section">
+                <h2><i class="fas fa-clock"></i> Thời Gian Sử Dụng</h2>
+                <div class="sensor-data">
+                    {% if stats.total_time > 0 %}
+                        <div class="sensor-item">
+                            <span class="sensor-label">Tổng thời gian:</span>
+                            <span class="sensor-value">{{ stats.total_time|round(1) }} giờ</span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Hôm nay:</span>
+                            <span class="sensor-value">{{ stats.today_time|round(1) }} giờ</span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Tuần này:</span>
+                            <span class="sensor-value">{{ stats.week_time|round(1) }} giờ</span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Trung bình mỗi ngày:</span>
+                            <span class="sensor-value">{{ stats.avg_time|round(1) }} giờ</span>
+                        </div>
+                    {% else %}
+                        <div class="sensor-item">
+                            <span class="sensor-label">Thông tin thống kê:</span>
+                            <span class="sensor-value error">Không có dữ liệu</span>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if stats.sit_time > 0 or stats.stand_time > 0 %}
+                    <canvas id="positionChart"></canvas>
+                    ```chartjs
+                    {
+                        "type": "pie",
+                        "data": {
+                            "labels": ["Ngồi", "Đứng"],
+                            "datasets": [{
+                                "data": [{{ stats.sit_time|round(1) }}, {{ stats.stand_time|round(1) }}],
+                                "backgroundColor": ["#36A2EB", "#FF6384"],
+                                "borderColor": ["#ffffff", "#ffffff"],
+                                "borderWidth": 1
+                            }]
+                        },
+                        "options": {
+                            "responsive": true,
+                            "plugins": {
+                                "legend": { "position": "top" },
+                                "title": {
+                                    "display": true,
+                                    "text": "Tỷ lệ thời gian ngồi/đứng (giờ)"
+                                }
+                            }
+                        }
+                    }
+                    ```
+                {% endif %}
+            </div>
+            <div class="section">
+                <h2><i class="fas fa-users"></i> Người Sử Dụng</h2>
+                {% if stats.users %}
+                    <div class="table-container">
+                        <table>
+                            <tr>
+                                <th>Người dùng</th>
+                                <th>Tổng thời gian (giờ)</th>
+                                <th>Số phiên</th>
+                                <th>Trung bình (phút)</th>
+                            </tr>
+                            {% for user in stats.users %}
+                                <tr>
+                                    <td>{{ user.user }}</td>
+                                    <td>{{ user.total|round(1) }}</td>
+                                    <td>{{ user.count }}</td>
+                                    <td>{{ user.average|round(1) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="sensor-item">
+                        <span class="sensor-label">Thông tin người dùng:</span>
+                        <span class="sensor-value error">Không có dữ liệu</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="section">
+                <a href="/" class="button"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function showToast(message, type = 'success') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: type === 'success' ? "#4CAF50" : "#F44336",
+                stopOnFocus: true
+            }).showToast();
+        }
+
+        {% if not stats.users %}
+            showToast('Không có dữ liệu thống kê người dùng', 'error');
+        {% endif %}
+    </script>
+</body>
+</html>

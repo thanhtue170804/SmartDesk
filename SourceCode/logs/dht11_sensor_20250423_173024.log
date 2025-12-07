@@ -1,0 +1,23 @@
+2025-04-23 17:30:24,899 - INFO: 
+
+=================================================
+2025-04-23 17:30:24,899 - INFO: HỆ THỐNG ĐO NHIỆT ĐỘ VÀ ĐỘ ẨM
+2025-04-23 17:30:24,899 - INFO: =================================================
+2025-04-23 17:30:24,899 - INFO: Khởi tạo cảm biến DHT11 (PIN 4)...
+2025-04-23 17:30:24,899 - INFO: Hệ thống đã sẵn sàng!
+2025-04-23 17:30:24,899 - INFO: =================================================
+2025-04-23 17:30:25,926 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:27,446 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:28,965 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:29,466 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:30:32,486 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:34,005 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:35,525 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:36,026 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:30:39,045 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:40,565 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:42,085 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:42,585 - ERROR: Không thể đọc dữ liệu từ cảm biến DHT11!
+2025-04-23 17:30:45,605 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:47,125 - ERROR: Timeout đọc bit thấp
+2025-04-23 17:30:48,644 - ERROR: Timeout đọc bit thấp

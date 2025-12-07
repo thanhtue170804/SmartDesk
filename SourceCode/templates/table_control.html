@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều Khiển Bàn Nâng</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        .toastify { z-index: 1000; }
+        .button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .error { color: red; }
+        .success { color: green; }
+        .sensor-error { color: red; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Điều Khiển Bàn Nâng</h1>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h2><i class="fas fa-user"></i> Người Dùng Hiện Tại</h2>
+                <p id="current-user">Người dùng: {{ current_user.user_name if current_user else 'Chưa có người dùng' }}</p>
+            </div>
+            <div class="section">
+                <h2><i class="fas fa-info-circle"></i> Thông Tin Bàn</h2>
+                <div class="sensor-data">
+                    <div class="sensor-item">
+                        <span class="sensor-label">Chiều cao hiện tại:</span>
+                        <span class="sensor-value" id="current-height">
+                            {{ height if height > 0 else 'Ngoài phạm vi' }} {% if height > 0 %}cm{% endif %}
+                        </span>
+                    </div>
+                    <div class="sensor-item">
+                        <span class="sensor-label">Trạng thái:</span>
+                        <span class="sensor-value" id="table-status">{{ status }}</span>
+                    </div>
+                    <div id="sensor-error-display" class="sensor-error" style="display: {% if sensor_error %}block{% else %}none{% endif %};">
+                        Lỗi: Không thể đọc dữ liệu từ cảm biến khoảng cách
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h2><i class="fas fa-memory"></i> Vị Trí Bộ Nhớ</h2>
+                <div class="sensor-data">
+                    <div class="sensor-item">
+                        <span class="sensor-label">Vị trí 1 (Ngồi):</span>
+                        <span class="sensor-value" id="memory-pos-1">
+                            {{ memory_positions[1] if memory_positions[1] > 0 else 'Chưa đặt' }} {% if memory_positions[1] > 0 %}cm{% endif %}
+                        </span>
+                    </div>
+                    <div class="sensor-item">
+                        <span class="sensor-label">Vị trí 2 (Đứng):</span>
+                        <span class="sensor-value" id="memory-pos-2">
+                            {{ memory_positions[2] if memory_positions[2] > 0 else 'Chưa đặt' }} {% if memory_positions[2] > 0 %}cm{% endif %}
+                        </span>
+                    </div>
+                    {% if current_user and preferred_heights %}
+                        <div class="sensor-item">
+                            <span class="sensor-label">Độ cao ngồi cá nhân:</span>
+                            <span class="sensor-value" id="personal-sitting">
+                                {{ preferred_heights.sitting if preferred_heights.sitting > 0 else 'Chưa đặt' }} {% if preferred_heights.sitting > 0 %}cm{% endif %}
+                            </span>
+                        </div>
+                        <div class="sensor-item">
+                            <span class="sensor-label">Độ cao đứng cá nhân:</span>
+                            <span class="sensor-value" id="personal-standing">
+                                {{ preferred_heights.standing if preferred_heights.standing > 0 else 'Chưa đặt' }} {% if preferred_heights.standing > 0 %}cm{% endif %}
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="section">
+                <h2><i class="fas fa-cog"></i> Điều Khiển</h2>
+                <div class="button-group">
+                    <button onclick="moveTable('up')" class="button"><i class="fas fa-arrow-up"></i> ▲ LÊN</button>
+                    <button onclick="moveTable('down')" class="button"><i class="fas fa-arrow-down"></i> ▼ XUỐNG</button>
+                    <button onclick="moveTable('stop')" class="button"><i class="fas fa-stop"></i> DỪNG</button>
+                    <button onclick="moveTable('pos1')" class="button"><i class="fas fa-chair"></i> Vị trí 1</button>
+                    <button onclick="moveTable('pos2')" class="button"><i class="fas fa-walking"></i> Vị trí 2</button>
+                    {% if current_user %}
+                        <button onclick="saveHeight('sitting')" class="button" id="save-sitting-btn"><i class="fas fa-save"></i> Lưu vị trí ngồi</button>
+                        <button onclick="saveHeight('standing')" class="button" id="save-standing-btn"><i class="fas fa-save"></i> Lưu vị trí đứng</button>
+                    {% else %}
+                        <button disabled class="button" id="save-sitting-btn"><i class="fas fa-save"></i> Lưu vị trí ngồi</button>
+                        <button disabled class="button" id="save-standing-btn"><i class="fas fa-save"></i> Lưu vị trí đứng</button>
+                    {% endif %}
+                    <a href="/" class="button"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Biến để lưu trạng thái
+        let refreshInterval;
+        let hasCurrentUser = {{ 'true' if current_user else 'false' }};
+
+        function showToast(message, type = 'success') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: type === 'success' ? "#4CAF50" : "#F44336",
+                stopOnFocus: true
+            }).showToast();
+        }
+
+        function refreshData() {
+            // Thử fetch dữ liệu từ route status trước
+            fetch('/table_control/status')
+            .then(response => {
+                if (!response.ok) {
+                    // Nếu route status không tồn tại, thử reload trang hiện tại
+                    throw new Error('Status route not available');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    updateTableData(data);
+                }
+            })
+            .catch(error => {
+                // Fallback: Fetch HTML của trang hiện tại và parse dữ liệu
+                console.log('Sử dụng fallback method để refresh dữ liệu');
+                refreshDataFallback();
+            });
+        }
+
+        function updateTableData(data) {
+            // Cập nhật chiều cao hiện tại
+            document.getElementById('current-height').innerText = 
+                data.height > 0 ? `${data.height} cm` : 'Ngoài phạm vi';
+            
+            // Cập nhật trạng thái bàn
+            document.getElementById('table-status').innerText = data.status_text;
+            
+            // Cập nhật vị trí bộ nhớ
+            if (data.memory_positions) {
+                document.getElementById('memory-pos-1').innerText = 
+                    data.memory_positions[1] > 0 ? `${data.memory_positions[1]} cm` : 'Chưa đặt';
+                document.getElementById('memory-pos-2').innerText = 
+                    data.memory_positions[2] > 0 ? `${data.memory_positions[2]} cm` : 'Chưa đặt';
+            }
+            
+            // Cập nhật độ cao cá nhân nếu có
+            if (data.preferred_heights && hasCurrentUser) {
+                const personalSitting = document.getElementById('personal-sitting');
+                const personalStanding = document.getElementById('personal-standing');
+                
+                if (personalSitting) {
+                    personalSitting.innerText = 
+                        data.preferred_heights.sitting > 0 ? `${data.preferred_heights.sitting} cm` : 'Chưa đặt';
+                }
+                if (personalStanding) {
+                    personalStanding.innerText = 
+                        data.preferred_heights.standing > 0 ? `${data.preferred_heights.standing} cm` : 'Chưa đặt';
+                }
+            }
+            
+            // Cập nhật thông tin người dùng hiện tại
+            if (data.current_user) {
+                document.getElementById('current-user').innerText = 
+                    `Người dùng: ${data.current_user.user_name}`;
+                
+                // Cập nhật trạng thái hasCurrentUser nếu thay đổi
+                if (!hasCurrentUser) {
+                    hasCurrentUser = true;
+                    updateSaveButtons();
+                }
+            } else {
+                document.getElementById('current-user').innerText = 'Người dùng: Chưa có người dùng';
+                
+                if (hasCurrentUser) {
+                    hasCurrentUser = false;
+                    updateSaveButtons();
+                }
+            }
+            
+            // Cập nhật lỗi cảm biến
+            const errorDisplay = document.getElementById('sensor-error-display');
+            if (data.sensor_error) {
+                errorDisplay.style.display = 'block';
+            } else {
+                errorDisplay.style.display = 'none';
+            }
+        }
+
+        function refreshDataFallback() {
+            // Fallback method: Fetch trang hiện tại và parse dữ liệu từ HTML
+            fetch(window.location.href, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Tạo một DOM parser để parse HTML response
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Extract dữ liệu từ HTML mới
+                const newHeight = doc.getElementById('current-height');
+                const newStatus = doc.getElementById('table-status');
+                const newMemoryPos1 = doc.getElementById('memory-pos-1');
+                const newMemoryPos2 = doc.getElementById('memory-pos-2');
+                const newCurrentUser = doc.getElementById('current-user');
+                const newSensorError = doc.getElementById('sensor-error-display');
+                
+                // Cập nhật dữ liệu nếu có
+                if (newHeight) {
+                    document.getElementById('current-height').innerHTML = newHeight.innerHTML;
+                }
+                if (newStatus) {
+                    document.getElementById('table-status').innerHTML = newStatus.innerHTML;
+                }
+                if (newMemoryPos1) {
+                    document.getElementById('memory-pos-1').innerHTML = newMemoryPos1.innerHTML;
+                }
+                if (newMemoryPos2) {
+                    document.getElementById('memory-pos-2').innerHTML = newMemoryPos2.innerHTML;
+                }
+                if (newCurrentUser) {
+                    document.getElementById('current-user').innerHTML = newCurrentUser.innerHTML;
+                }
+                
+                // Cập nhật thông tin cá nhân nếu có
+                const newPersonalSitting = doc.getElementById('personal-sitting');
+                const newPersonalStanding = doc.getElementById('personal-standing');
+                if (newPersonalSitting && document.getElementById('personal-sitting')) {
+                    document.getElementById('personal-sitting').innerHTML = newPersonalSitting.innerHTML;
+                }
+                if (newPersonalStanding && document.getElementById('personal-standing')) {
+                    document.getElementById('personal-standing').innerHTML = newPersonalStanding.innerHTML;
+                }
+                
+                // Cập nhật lỗi cảm biến
+                if (newSensorError) {
+                    const currentErrorDisplay = document.getElementById('sensor-error-display');
+                    currentErrorDisplay.style.display = newSensorError.style.display;
+                }
+                
+                // Kiểm tra trạng thái user để cập nhật nút
+                const userText = document.getElementById('current-user').innerText;
+                const newHasCurrentUser = !userText.includes('Chưa có người dùng');
+                if (newHasCurrentUser !== hasCurrentUser) {
+                    hasCurrentUser = newHasCurrentUser;
+                    updateSaveButtons();
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi khi làm mới dữ liệu (fallback):', error);
+            });
+        }
+
+        function updateSaveButtons() {
+            const saveSittingBtn = document.getElementById('save-sitting-btn');
+            const saveStandingBtn = document.getElementById('save-standing-btn');
+            
+            if (hasCurrentUser) {
+                saveSittingBtn.disabled = false;
+                saveStandingBtn.disabled = false;
+                saveSittingBtn.onclick = () => saveHeight('sitting');
+                saveStandingBtn.onclick = () => saveHeight('standing');
+            } else {
+                saveSittingBtn.disabled = true;
+                saveStandingBtn.disabled = true;
+                saveSittingBtn.onclick = null;
+                saveStandingBtn.onclick = null;
+            }
+        }
+
+        function moveTable(action) {
+            fetch('/table_control/move', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `action=${action}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('current-height').innerText = 
+                        data.height > 0 ? `${data.height} cm` : 'Ngoài phạm vi';
+                    document.getElementById('table-status').innerText = data.status_text;
+                    showToast(`Điều khiển bàn: ${data.status_text}`, 'success');
+                } else {
+                    showToast(`Lỗi: ${data.message}`, 'error');
+                }
+            })
+            .catch(error => showToast(`Lỗi: ${error.message}`, 'error'));
+        }
+
+        function saveHeight(position) {
+            if (!hasCurrentUser) {
+                showToast('Cần đăng nhập để lưu vị trí cá nhân', 'error');
+                return;
+            }
+            
+            fetch(`/set_height/${position}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showToast(data.message, data.success ? 'success' : 'error');
+                if (data.success) {
+                    // Làm mới dữ liệu ngay lập tức thay vì reload trang
+                    setTimeout(refreshData, 500);
+                }
+            })
+            .catch(error => showToast(`Lỗi: ${error.message}`, 'error'));
+        }
+
+        // Khởi tạo khi trang được tải
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSaveButtons();
+            
+            // Hiển thị lỗi cảm biến nếu có
+            {% if sensor_error %}
+                showToast('Không thể đọc dữ liệu từ cảm biến khoảng cách', 'error');
+            {% endif %}
+            
+            // Bắt đầu auto-refresh mỗi 2 giây
+            refreshInterval = setInterval(refreshData, 2000);
+        });
+
+        // Dừng auto-refresh khi rời khỏi trang
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

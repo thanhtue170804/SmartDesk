@@ -1,0 +1,13 @@
+2025-04-24 07:42:16,425 - INFO - Cảm biến DHT11 được khởi tạo tại chân GPIO 4
+2025-04-24 07:42:16,425 - WARNING - Lần thử 1/3: Cannot determine SOC peripheral base address
+2025-04-24 07:42:18,426 - WARNING - Lần thử 2/3: Cannot determine SOC peripheral base address
+2025-04-24 07:42:20,427 - WARNING - Lần thử 3/3: Cannot determine SOC peripheral base address
+2025-04-24 07:42:22,427 - ERROR - Không thể đọc dữ liệu sau nhiều lần thử
+2025-04-24 07:42:25,429 - WARNING - Lần thử 1/3: Cannot determine SOC peripheral base address
+2025-04-24 07:42:27,431 - WARNING - Lần thử 2/3: Cannot determine SOC peripheral base address
+2025-04-24 07:42:29,431 - WARNING - Lần thử 3/3: Cannot determine SOC peripheral base address
+2025-04-24 07:42:31,432 - ERROR - Không thể đọc dữ liệu sau nhiều lần thử
+2025-04-24 07:42:34,433 - WARNING - Lần thử 1/3: Cannot determine SOC peripheral base address
+2025-04-24 07:42:36,435 - WARNING - Lần thử 2/3: Cannot determine SOC peripheral base address
+2025-04-24 07:42:38,436 - WARNING - Lần thử 3/3: Cannot determine SOC peripheral base address
+2025-04-24 07:42:40,436 - ERROR - Không thể đọc dữ liệu sau nhiều lần thử
